@@ -37,9 +37,11 @@ greenwashing-nlp-analysis/
 ├── notebooks/
 │   ├── 01_data_collection.ipynb
 │   ├── 02_preprocessing_topic_modelling.ipynb
+│   ├── 02b_filtered_coherence_score_colab.ipynb   # run on Google Colab
+│   ├── 02c_subset_coherence_score_colab.ipynb     # run on Google Colab
 │   ├── 03_data_augmentation.ipynb
 │   ├── 04_sentiment_ner.ipynb
-│   └── 05_roberta_colab.ipynb          # run on Google Colab (GPU required)
+│   └── 05_roberta_colab.ipynb                     # run on Google Colab (GPU required)
 ├── data/
 │   ├── raw/                             # not tracked (too large for GitHub)
 │   │   └── <SubredditName>/
@@ -104,7 +106,7 @@ All files in `data/processed/` are tracked and ready to use:
 | File | Rows | Description |
 |------|------|-------------|
 | `greenwashing_dataset_filtered.csv` | 27,851 | Full Reddit corpus after keyword filtering and outlier removal |
-| `df_greenwashing_topic1.csv` | 2,937 | Greenwashing-dominant topic subset (LDA topic 1) |
+| `df_greenwashing_topic1.csv` | 3,602 | Greenwashing-dominant topic subset (LDA topic 1) |
 | `df_sunscreen_real.csv` | 27 | Real Reddit documents mentioning reef-safe sunscreen |
 | `df_sunscreen_synthetic.csv` | 260 | Synthetic documents generated via Claude API |
 | `df_sunscreen_augmented.csv` | 287 | Combined real + synthetic corpus |
