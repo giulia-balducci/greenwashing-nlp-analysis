@@ -12,7 +12,7 @@ Edgewell's Banana Boat and Hawaiian Tropic products were labelled "reef friendly
 
 This project analyses public discourse around these claims using a combination of topic modelling, sentiment analysis, named entity recognition, and transformer-based classification.
 
-The dataset combines 27 real Reddit documents with 260 synthetic documents generated to augment the corpus around the ACCC case, for a total of 287 documents.
+The dataset combines 8 real Reddit documents with 260 synthetic documents generated to augment the corpus around the ACCC case, for a total of 268 documents.
 
 ## Pipeline
 
@@ -20,7 +20,7 @@ The dataset combines 27 real Reddit documents with 260 synthetic documents gener
 |----------|-------------|--------|
 | `01_data_collection.ipynb` | Loads raw Reddit CSVs from 11 subreddits, filters by keyword, combines posts and comments | `greenwashing_dataset_filtered.csv` |
 | `02_preprocessing_topic_modelling.ipynb` | Text preprocessing, LDA topic modelling (n=7), coherence score analysis, greenwashing subset extraction | `df_greenwashing_topic1.csv` |
-| `03_data_augmentation.ipynb` | Keyword filtering of sunscreen subset (27 docs), synthetic data generation (260 docs) via Claude API | `df_sunscreen_augmented.csv` |
+| `03_data_augmentation.ipynb` | Keyword filtering of sunscreen subset (8 docs), synthetic data generation (260 docs) via Claude API | `df_sunscreen_augmented.csv` |
 | `04_sentiment_ner.ipynb` | VADER sentiment analysis, spaCy NER with custom entity ruler, brand sentiment comparison, ACCC case analysis, dashboard | `df_sunscreen_final.csv` |
 | `05_roberta_colab.ipynb` | RoBERTa transformer sentiment analysis (GPU), VADER vs RoBERTa comparison | figures |
 
@@ -107,10 +107,10 @@ All files in `data/processed/` are tracked and ready to use:
 |------|------|-------------|
 | `greenwashing_dataset_filtered.csv` | 27,851 | Full Reddit corpus after keyword filtering and outlier removal |
 | `df_greenwashing_topic1.csv` | 3,602 | Greenwashing-dominant topic subset (LDA topic 1) |
-| `df_sunscreen_real.csv` | 27 | Real Reddit documents mentioning reef-safe sunscreen |
+| `df_sunscreen_real.csv` | 8 | Real Reddit documents mentioning reef-safe sunscreen |
 | `df_sunscreen_synthetic.csv` | 260 | Synthetic documents generated via Claude API |
-| `df_sunscreen_augmented.csv` | 287 | Combined real + synthetic corpus |
-| `df_sunscreen_final.csv` | 287 | Final dataset with sentiment scores and NER output |
+| `df_sunscreen_augmented.csv` | 268 | Combined real + synthetic corpus |
+| `df_sunscreen_final.csv` | 268 | Final dataset with sentiment scores and NER output |
 
 ## Author
 
