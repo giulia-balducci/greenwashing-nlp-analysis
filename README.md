@@ -22,13 +22,13 @@ The dataset combines 8 real Reddit documents with 260 synthetic documents genera
 | `02_preprocessing_topic_modelling.ipynb` | Text preprocessing, LDA topic modelling (n=7), coherence score analysis, greenwashing subset extraction | `df_greenwashing_topic1.csv` |
 | `03_data_augmentation.ipynb` | Keyword filtering of sunscreen subset (8 docs), synthetic data generation (260 docs) via Claude API | `df_sunscreen_augmented.csv` |
 | `04_sentiment_ner.ipynb` | VADER sentiment analysis, spaCy NER with custom entity ruler, brand sentiment comparison, ACCC case analysis, dashboard | `df_sunscreen_final.csv` |
-| `05_roberta_colab.ipynb` | RoBERTa transformer sentiment analysis (GPU), VADER vs RoBERTa comparison | figures |
+| `05_roberta.ipynb` | RoBERTa transformer sentiment analysis (GPU), VADER vs RoBERTa comparison | figures |
 
-Notebooks are designed to run in sequence. `05_roberta_colab.ipynb` requires a GPU and was run on Google Colab.
+Notebooks are designed to run in sequence. `05_roberta.ipynb` requires a GPU.
 
 ## Results
 
-_Section to be completed after re-running notebooks 01–04._
+_Section to be completed after re-running notebooks 01–05._
 
 ## Repository Structure
 
@@ -41,7 +41,7 @@ greenwashing-nlp-analysis/
 │   ├── 02c_subset_coherence_score_colab.ipynb     # run on Google Colab
 │   ├── 03_data_augmentation.ipynb
 │   ├── 04_sentiment_ner.ipynb
-│   └── 05_roberta_colab.ipynb                     # run on Google Colab (GPU required)
+│   └── 05_roberta.ipynb                           # requires GPU
 ├── data/
 │   ├── raw/                             # not tracked (too large for GitHub)
 │   │   └── <SubredditName>/
@@ -90,7 +90,7 @@ nltk.download('vader_lexicon')
 
 **Note:** `gensim` (coherence score analysis in notebook 02) requires Python ≤ 3.12. If your local environment uses Python 3.13+, run the coherence analysis on Google Colab using the precomputed scores included in the notebook markdown cells.
 
-**Note:** `05_roberta_colab.ipynb` requires a GPU. Upload `data/processed/df_sunscreen_augmented.csv` to Colab and run the notebook there.
+**Note:** `05_roberta.ipynb` requires a GPU. Upload `data/processed/df_sunscreen_augmented.csv` to Colab and run the notebook there.
 
 ## Data
 
