@@ -22,13 +22,57 @@ The dataset combines 8 real Reddit documents with 260 synthetic documents genera
 | `02_preprocessing_topic_modelling.ipynb` | Text preprocessing, LDA topic modelling (n=7), coherence score analysis, greenwashing subset extraction | `df_greenwashing_topic1.csv` |
 | `03_data_augmentation.ipynb` | Keyword filtering of sunscreen subset (8 docs), synthetic data generation (260 docs) via Claude API | `df_sunscreen_augmented.csv` |
 | `04_sentiment_ner.ipynb` | VADER sentiment analysis, spaCy NER with custom entity ruler, brand sentiment comparison, ACCC case analysis, dashboard | `df_sunscreen_final.csv` |
-| `05_roberta.ipynb` | RoBERTa transformer sentiment analysis (GPU), VADER vs RoBERTa comparison | figures |
+| `05_roberta.ipynb` | RoBERTa transformer sentiment analysis, VADER vs RoBERTa comparison | figures |
 
-Notebooks are designed to run in sequence. `05_roberta.ipynb` requires a GPU.
+Notebooks are designed to run in sequence.
 
 ## Results
 
-_Section to be completed after re-running notebooks 01–05._
+### Topic Modelling
+LDA on the full filtered corpus (n=27,851, 7 topics) isolated a greenwashing-dominant topic of **3,602 documents (12.9% of the corpus)**. A second-level LDA on this subset (6 subtopics) informed the stratified synthetic data generation in notebook 03.
+
+### Dataset
+The sunscreen-specific corpus combines **8 real Reddit documents** with **260 synthetic documents**, for a total of **268 documents** (real + synthetic).
+
+### Sentiment Analysis: VADER vs RoBERTa
+RoBERTa (`cardiffnlp/twitter-roberta-base-sentiment-latest`) is substantially more critical than VADER on this corpus:
+
+| | VADER (rule-based) | RoBERTa (transformer) |
+|---|---|---|
+| Positive | 67.5% (181) | 22.0% (59) |
+| Negative | 23.9% (64) | 41.0% (110) |
+| Neutral | 8.6% (23) | 36.9% (99) |
+
+The gap is consistent with VADER over-crediting sarcastic or hedged language as positive — a limitation RoBERTa's transformer architecture is better equipped to handle.
+
+### Brand-Level Sentiment (RoBERTa, entity-based)
+Using spaCy entity mentions (not string matching) to attribute documents to brands, all four brands named in the ACCC case score negative, and all five reef-safe brands score positive:
+
+| Brand | Category | Mean RoBERTa score |
+|---|---|---|
+| Banana Boat | Greenwashing | -0.53 |
+| Hawaiian Tropic | Greenwashing | -0.52 |
+| Coppertone | Greenwashing | -0.50 |
+| Neutrogena | Greenwashing | -0.08 |
+| Raw Elements | Reef-safe | +0.05 |
+| Stream2Sea | Reef-safe | +0.17 |
+| Sun Bum | Reef-safe | +0.25 |
+| Thinksport | Reef-safe | +0.27 |
+| Badger Balm | Reef-safe | +0.44 |
+
+### ACCC Case Study
+Of the 268 documents, **75 mention the ACCC case** (`ACCC`, `Edgewell`, `Federal Court`). This subset shows the sharpest VADER/RoBERTa divergence in the whole analysis:
+
+| | VADER | RoBERTa |
+|---|---|---|
+| Positive | 72.0% (54) | 10.7% (8) |
+| Negative | 26.7% (20) | 41.3% (31) |
+| Neutral | 1.3% (1) | 48.0% (36) |
+
+VADER reads celebratory reactions to the ACCC ruling ("finally called out", "about time") as lexically positive; RoBERTa correctly identifies the underlying sentiment toward Edgewell/Banana Boat/Hawaiian Tropic as negative. This is the clearest evidence in the dataset for VADER's sarcasm-detection limitation flagged in notebook 04.
+
+### Limitations
+Both models score sentiment at the document level, not the entity level: reef-safe brands mentioned inside otherwise negative documents (e.g. "betrayed by Banana Boat, switched to Raw Elements") have their positive mention pulled toward neutral by the surrounding negativity — this is the likely explanation for Raw Elements' comparatively weak +0.05 score. RoBERTa's 512-token truncation affects only 2 of the 268 documents (0.7%), so it has negligible impact on these results.
 
 ## Repository Structure
 
@@ -41,7 +85,7 @@ greenwashing-nlp-analysis/
 │   ├── 02c_subset_coherence_score_colab.ipynb     # run on Google Colab
 │   ├── 03_data_augmentation.ipynb
 │   ├── 04_sentiment_ner.ipynb
-│   └── 05_roberta.ipynb                           # requires GPU
+│   └── 05_roberta.ipynb
 ├── data/
 │   ├── raw/                             # not tracked (too large for GitHub)
 │   │   └── <SubredditName>/
@@ -90,7 +134,7 @@ nltk.download('vader_lexicon')
 
 **Note:** `gensim` (coherence score analysis in notebook 02) requires Python ≤ 3.12. If your local environment uses Python 3.13+, run the coherence analysis on Google Colab using the precomputed scores included in the notebook markdown cells.
 
-**Note:** `05_roberta.ipynb` requires a GPU. Upload `data/processed/df_sunscreen_augmented.csv` to Colab and run the notebook there.
+**Note:** `05_roberta.ipynb` downloads `cardiffnlp/twitter-roberta-base-sentiment-latest` and runs it locally via `transformers`. It works on CPU but is faster with a GPU/MPS-enabled PyTorch install.
 
 ## Data
 
