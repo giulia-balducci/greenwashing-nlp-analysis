@@ -20,7 +20,7 @@ The dataset combines 8 real Reddit documents with 260 synthetic documents genera
 |----------|-------------|--------|
 | `01_data_collection.ipynb` | Loads raw Reddit CSVs from 11 subreddits, filters by keyword, combines posts and comments | `greenwashing_dataset_filtered.csv` |
 | `02_preprocessing_topic_modelling.ipynb` | Text preprocessing, LDA topic modelling (n=7), coherence score analysis, greenwashing subset extraction | `df_greenwashing_topic1.csv` |
-| `03_data_augmentation.ipynb` | Keyword filtering of sunscreen subset (8 docs), synthetic data generation (260 docs) via Claude API | `df_sunscreen_augmented.csv` |
+| `03_data_augmentation.ipynb` | Keyword filtering of sunscreen subset (8 docs), synthetic data generation (260 docs) via Claude | `df_sunscreen_augmented.csv` |
 | `04_sentiment_ner.ipynb` | VADER sentiment analysis, spaCy NER with custom entity ruler, brand sentiment comparison, ACCC case analysis, dashboard | `df_sunscreen_final.csv` |
 | `05_roberta.ipynb` | RoBERTa transformer sentiment analysis, VADER vs RoBERTa comparison | figures |
 
@@ -43,7 +43,7 @@ RoBERTa (`cardiffnlp/twitter-roberta-base-sentiment-latest`) is substantially mo
 | Negative | 23.9% (64) | 41.0% (110) |
 | Neutral | 8.6% (23) | 36.9% (99) |
 
-The gap is consistent with VADER over-crediting sarcastic or hedged language as positive — a limitation RoBERTa's transformer architecture is better equipped to handle.
+The gap is consistent with VADER over-crediting sarcastic or hedged language as positive - a limitation RoBERTa's transformer architecture is better equipped to handle.
 
 ### Brand-Level Sentiment (RoBERTa, entity-based)
 Using spaCy entity mentions (not string matching) to attribute documents to brands, all four brands named in the ACCC case score negative, and all five reef-safe brands score positive:
@@ -152,7 +152,7 @@ All files in `data/processed/` are tracked and ready to use:
 | `greenwashing_dataset_filtered.csv` | 27,851 | Full Reddit corpus after keyword filtering and outlier removal |
 | `df_greenwashing_topic1.csv` | 3,602 | Greenwashing-dominant topic subset (LDA topic 1) |
 | `df_sunscreen_real.csv` | 8 | Real Reddit documents mentioning reef-safe sunscreen |
-| `df_sunscreen_synthetic.csv` | 260 | Synthetic documents generated via Claude API |
+| `df_sunscreen_synthetic.csv` | 260 | Synthetic documents generated via Claude |
 | `df_sunscreen_augmented.csv` | 268 | Combined real + synthetic corpus |
 | `df_sunscreen_final.csv` | 268 | Final dataset with sentiment scores and NER output |
 
