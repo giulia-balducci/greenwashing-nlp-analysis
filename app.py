@@ -3,7 +3,13 @@ import streamlit as st
 import ast
 import altair as alt
 
-st.title("Greenwashing NLP Analysis - Brand Sentiment and Mention Frequency Dashboard")
+# Create a brand list
+brands = ['Banana Boat', 'Hawaiian Tropic', 'Neutrogena', 'Coppertone',
+          'Stream2Sea', 'Raw Elements', 'Thinksport', 'Badger Balm', 'Sun Bum']
+
+# Set title and description
+st.title("Reef-safe Sunscreen & Greenwashing: the conversation, brand by brand")
+st.caption(f"Demo dashboard: sentiment of online discussion about {len(brands)} sunscreen brands, anchored to the 2025 ACCC v Edgewell case.")
 
 # Function to check if a brand is mentioned in the entities
 def mentions_brand(entities_or_str, brand):
@@ -30,10 +36,6 @@ n_real = len(df) - n_synthetic
 
 # Display a warning about the dataset composition
 st.warning(f"The dataset contains {n_real} real documents and {n_synthetic} synthetic (AI-generated) documents. The results are demonstrative and do not represent real public opinion.")
-
-# Create a brand list
-brands = ['Banana Boat', 'Hawaiian Tropic', 'Neutrogena', 'Coppertone',
-          'Stream2Sea', 'Raw Elements', 'Thinksport', 'Badger Balm', 'Sun Bum']
 
 # Create a selectbox for brand selection
 selected_brand = st.selectbox("Select a brand:", brands)
