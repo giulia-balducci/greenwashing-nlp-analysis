@@ -78,6 +78,7 @@ with col1:
         ),
     )
     st.altair_chart(chart, use_container_width=True)
+    st.caption("The bars show the share of documents associated with a sentiment: negative, neutral, or positive. This shows how the brand is discussed, not proof that it engages in greenwashing.")
 
 with col2:
     st.write("### Summary Table")
@@ -98,6 +99,8 @@ with col2:
     column_config={
         "brand": st.column_config.TextColumn("Brand"),
         "n_docs": st.column_config.NumberColumn("Number of documents"),
-        "mean_score": st.column_config.NumberColumn("Mean sentiment score", format="%.2f"),
+        "mean_score": st.column_config.NumberColumn("Mean sentiment score (-1 to 1)", format="%.2f"),
     },
     )
+    st.caption("Mean sentiment score ranges from -1 (all documents negative) to +1 (all documents positive). Each document is scored as a whole, so a reef-safe brand may score lower than how it is actually discussed, for instance if mentioned as a trusted alternative in a document with overall negative sentiment.")
+    
