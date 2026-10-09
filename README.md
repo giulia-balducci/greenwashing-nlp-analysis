@@ -1,14 +1,14 @@
 # Greenwashing NLP Analysis: Reef-Safe Sunscreen Claims
 
 **NLP analysis of greenwashing claims in reef-safe sunscreen marketing**  
-VADER · RoBERTa · LDA · spaCy NER | Anchored to ACCC v Edgewell Personal Care (2025)
+VADER · RoBERTa · LDA · spaCy NER · Streamlit | Anchored to ACCC v Edgewell Personal Care (2025)
 
 ---
 
 ## Project Overview
 This project was developed as one of the assignments for the Applied AI Bootcamp at AllWomen (Barcelona, April 2026). It applies NLP techniques to analyse greenwashing claims in reef-safe sunscreen marketing, anchored to the ACCC v Edgewell Personal Care Federal Court proceedings (July 2025).
 
-Edgewell's Banana Boat and Hawaiian Tropic products were labelled "reef friendly" while containing oxybenzone and other chemical UV filters linked to coral bleaching.
+Edgewell's Banana Boat and Hawaiian Tropic products were labelled "reef friendly" while allegedly containing oxybenzone and other chemical UV filters linked to coral bleaching.
 
 This project analyses public discourse around these claims using a combination of topic modelling, sentiment analysis, named entity recognition, and transformer-based classification.
 
@@ -22,7 +22,7 @@ The dataset combines 8 real Reddit documents with 260 synthetic documents genera
 | `02_preprocessing_topic_modelling.ipynb` | Text preprocessing, LDA topic modelling (n=7), coherence score analysis, greenwashing subset extraction | `df_greenwashing_topic1.csv` |
 | `03_data_augmentation.ipynb` | Keyword filtering of sunscreen subset (8 docs), synthetic data generation (260 docs) via Claude | `df_sunscreen_augmented.csv` |
 | `04_sentiment_ner.ipynb` | VADER sentiment analysis, spaCy NER with custom entity ruler, brand sentiment comparison, ACCC case analysis, dashboard | `df_sunscreen_final.csv` |
-| `05_roberta.ipynb` | RoBERTa transformer sentiment analysis, VADER vs RoBERTa comparison | figures |
+| `05_roberta.ipynb` | RoBERTa transformer sentiment analysis, VADER vs RoBERTa comparison, saves RoBERTa labels and scores | figures, `df_sunscreen_dashboard.csv` |
 
 Notebooks are designed to run in sequence.
 
@@ -74,6 +74,38 @@ VADER reads celebratory reactions to the ACCC ruling ("finally called out", "abo
 ### Limitations
 Both models score sentiment at the document level, not the entity level: reef-safe brands mentioned inside otherwise negative documents (e.g. "betrayed by Banana Boat, switched to Raw Elements") have their positive mention pulled toward neutral by the surrounding negativity — this is the likely explanation for Raw Elements' comparatively weak +0.05 score. RoBERTa's 512-token truncation affects only 2 of the 268 documents (0.7%), so it has negligible impact on these results.
 
+## Dashboard
+
+`app.py` is a Streamlit dashboard built on the results of notebook 05. It is written for readers who have not seen the notebooks, such as a climate media-monitoring team.
+
+**What it shows**
+- A brand selector (9 brands). For the selected brand: the share of documents classified negative, neutral or positive by RoBERTa, and the number of documents the chart is based on.
+- A summary table for all brands: number of documents mentioning the brand and mean sentiment score (-1 to +1).
+- A notice with the number of real and synthetic documents, computed from the `is_synthetic` column, and two reading notes: the bars show how a brand is discussed, not proof of greenwashing; scores are computed per document, not per brand.
+
+**Design choices**
+- VADER is not shown: the dashboard presents RoBERTa results only.
+- The model is not run in the dashboard. It reads the precomputed `data/processed/df_sunscreen_dashboard.csv` (268 rows), written by notebook 05.
+- Documents are attributed to brands through the spaCy entities, as in notebook 05.
+
+**Run locally** (from the repository root)
+
+```bash
+streamlit run app.py
+```
+
+**Status:** runs locally. Not deployed yet.
+
+**Limitations**
+- Shares and means are computed on the documents mentioning each brand, drawn from a corpus of 268 documents, of which 260 are synthetic. The results are demonstrative and do not represent real public opinion.
+- Coppertone and Sun Bum are each mentioned in 4 documents, so their scores rest on very few documents.
+- Scores are computed per document, not per brand mention (see Limitations above for the Raw Elements case).
+
+## Future Work
+- **Deploy the dashboard** on Streamlit Community Cloud. `requirements.txt` currently includes notebook-only packages (`torch`, `transformers`, `spacy`, `gensim`) that the dashboard does not import, so dependencies would first be split into one file for the app and one for the notebooks.
+- **ACCC view in the dashboard:** sentiment of the 75 documents mentioning the case, as in notebook 05.
+- **Real data:** a collector for new online mentions of the nine brands, analysed with the same RoBERTa pipeline and added to the dataset. An alert on a brand's mean score would need a threshold and a minimum number of documents, to be set once real data is available.
+
 ## Repository Structure
 
 ```
@@ -98,8 +130,10 @@ greenwashing-nlp-analysis/
 │       ├── df_sunscreen_real.csv               # output of notebook 03 (real subset)
 │       ├── df_sunscreen_synthetic.csv          # output of notebook 03 (synthetic)
 │       ├── df_sunscreen_augmented.csv          # output of notebook 03 (combined)
-│       └── df_sunscreen_final.csv              # output of notebook 04
+│       ├── df_sunscreen_final.csv              # output of notebook 04
+│       └── df_sunscreen_dashboard.csv          # output of notebook 05, read by app.py
 ├── figures/                             # generated by notebooks 04 and 05
+├── app.py                               # Streamlit dashboard
 ├── .gitignore
 ├── requirements.txt
 └── README.md
@@ -155,6 +189,7 @@ All files in `data/processed/` are tracked and ready to use:
 | `df_sunscreen_synthetic.csv` | 260 | Synthetic documents generated via Claude |
 | `df_sunscreen_augmented.csv` | 268 | Combined real + synthetic corpus |
 | `df_sunscreen_final.csv` | 268 | Final dataset with sentiment scores and NER output |
+| `df_sunscreen_dashboard.csv` | 268 | `df_sunscreen_final.csv` plus RoBERTa label, score and numeric score; read by the dashboard |
 
 ## Author
 
