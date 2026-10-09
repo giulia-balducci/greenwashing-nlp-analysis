@@ -39,7 +39,7 @@ n_real = len(df) - n_synthetic
 
 # Short introduction for readers who don't know the case
 st.markdown("""
-A 2025 court case (ACCC v Edgewell Personal Care) centred on Banana Boat and Hawaiian Tropic sunscreens, which were labelled reef-friendly while allegedly containing oxybenzone and other chemical UV filters linked to coral bleaching.
+A 2025 court case (ACCC v Edgewell Personal Care) centred on Banana Boat and Hawaiian Tropic sunscreens, marketed in Australia as reef-friendly. The Australian consumer regulator (ACCC) alleges they contained ingredients that harm reefs or risk harming them.
 
 We analysed online posts about these claims and measured the sentiment of the conversation around each brand: positive, neutral or negative.
 
