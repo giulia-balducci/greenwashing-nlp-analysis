@@ -69,7 +69,7 @@ Of the 268 documents, **75 mention the ACCC case** (`ACCC`, `Edgewell`, `Federal
 | Negative | 26.7% (20) | 41.3% (31) |
 | Neutral | 1.3% (1) | 48.0% (36) |
 
-VADER reads celebratory reactions to the ACCC ruling ("finally called out", "about time") as lexically positive; RoBERTa correctly identifies the underlying sentiment toward Edgewell/Banana Boat/Hawaiian Tropic as negative. This is the clearest evidence in the dataset for VADER's sarcasm-detection limitation flagged in notebook 04.
+VADER reads celebratory reactions to the ACCC proceedings ("finally called out", "about time") as lexically positive; RoBERTa correctly identifies the underlying sentiment toward Edgewell/Banana Boat/Hawaiian Tropic as negative. This is the clearest evidence in the dataset for VADER's sarcasm-detection limitation flagged in notebook 04.
 
 ### Limitations
 Both models score sentiment at the document level, not the entity level: reef-safe brands mentioned inside otherwise negative documents (e.g. "betrayed by Banana Boat, switched to Raw Elements") have their positive mention pulled toward neutral by the surrounding negativity — this is the likely explanation for Raw Elements' comparatively weak +0.05 score. RoBERTa's 512-token truncation affects only 2 of the 268 documents (0.7%), so it has negligible impact on these results.
