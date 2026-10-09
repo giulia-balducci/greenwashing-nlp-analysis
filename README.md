@@ -46,7 +46,7 @@ RoBERTa (`cardiffnlp/twitter-roberta-base-sentiment-latest`) is substantially mo
 The gap is consistent with VADER over-crediting sarcastic or hedged language as positive - a limitation RoBERTa's transformer architecture is better equipped to handle.
 
 ### Brand-Level Sentiment (RoBERTa, entity-based)
-Using spaCy entity mentions (not string matching) to attribute documents to brands, all four brands named in the ACCC case score negative, and all five reef-safe brands score positive:
+Using spaCy entity mentions (not string matching) to attribute documents to brands, all four brands labelled as greenwashing score negative, and all five reef-safe brands score positive:
 
 | Brand | Category | Mean RoBERTa score |
 |---|---|---|
