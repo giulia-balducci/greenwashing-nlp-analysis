@@ -8,7 +8,7 @@ VADER · RoBERTa · LDA · spaCy NER · Streamlit | Anchored to ACCC v Edgewell 
 ## Project Overview
 This project was developed as one of the assignments for the Applied AI Bootcamp at AllWomen (Barcelona, April 2026). It applies NLP techniques to analyse greenwashing claims in reef-safe sunscreen marketing, anchored to the ACCC v Edgewell Personal Care Federal Court proceedings (July 2025).
 
-Edgewell's Banana Boat and Hawaiian Tropic products were labelled "reef friendly" while allegedly containing oxybenzone and other chemical UV filters linked to coral bleaching.
+Edgewell's Banana Boat and Hawaiian Tropic sunscreens were marketed in Australia as "reef friendly", including because they did not contain oxybenzone or octinoxate. The ACCC alleges that they contained other ingredients that harm reefs or risk harming them.
 
 This project analyses public discourse around these claims using a combination of topic modelling, sentiment analysis, named entity recognition, and transformer-based classification.
 
