@@ -7,6 +7,9 @@ import altair as alt
 brands = ['Banana Boat', 'Hawaiian Tropic', 'Neutrogena', 'Coppertone',
           'Stream2Sea', 'Raw Elements', 'Thinksport', 'Badger Balm', 'Sun Bum']
 
+# Brands with fewer documents than this are flagged: their mean score is less reliable
+MIN_DOCS = 10
+
 #Set page to wide layout for better visualisation
 st.set_page_config(layout="wide")
 
@@ -50,7 +53,7 @@ Select a brand to see how it is discussed; the table gives the overview for all 
 st.warning(f"The dataset contains {n_real} real documents and {n_synthetic} synthetic (AI-generated) documents. The results are demonstrative and do not represent real public opinion.")
 
 # Create columns for brand selection and summary table
-col1, col2 = st.columns([3,2])
+col1, col2 = st.columns([1,1])
 with col1:
     st.write("### Brand selection and sentiment distribution")
     # Create a selectbox for brand selection
@@ -65,7 +68,7 @@ with col1:
     chart_df = shares.reset_index()
     chart_df.columns = ["sentiment", "share"]
     # domain and range are paired by position: negative -> coral, neutral -> grey, positive -> teal
-    chart = alt.Chart(chart_df).mark_bar().encode(
+    chart = alt.Chart(chart_df).mark_bar(size=150).encode(
         x=alt.X("sentiment", sort=["negative", "neutral", "positive"], axis=alt.Axis(labelAngle=0, title="Sentiment")),
         y=alt.Y("share", axis=alt.Axis(format=".0%", title="Share of documents")),
         tooltip=[
@@ -76,7 +79,7 @@ with col1:
             scale=alt.Scale(domain=["negative", "neutral", "positive"], range=["#ff7f50", "#b0b0b0", "#008080"]),
             legend=None,
         ),
-    )
+    ).properties(height=300)
     st.altair_chart(chart, use_container_width=True)
     st.caption("The bars show the share of documents associated with a sentiment: negative, neutral, or positive. This shows how the brand is discussed, not proof that it engages in greenwashing.")
 
@@ -93,6 +96,8 @@ with col2:
         })
 
     summary = pd.DataFrame(rows)
+    summary["note"] = " "
+    summary.loc[summary["n_docs"] < MIN_DOCS, "note"] = "Few documents"
     st.dataframe(
     summary,
     hide_index=True,
@@ -100,7 +105,8 @@ with col2:
         "brand": st.column_config.TextColumn("Brand"),
         "n_docs": st.column_config.NumberColumn("Number of documents"),
         "mean_score": st.column_config.NumberColumn("Mean sentiment score (-1 to 1)", format="%.2f"),
+        "note": st.column_config.TextColumn("Note", width="medium"),
     },
     )
     st.caption("Mean sentiment score ranges from -1 (all documents negative) to +1 (all documents positive). Each document is scored as a whole, so a reef-safe brand may score lower than how it is actually discussed, for instance if mentioned as a trusted alternative in a document with overall negative sentiment.")
-    
+    st.caption(f"Brands marked \"Few documents\" are based on fewer than {MIN_DOCS} documents, so their average can change a lot with a single document.")
