@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import ast
 import altair as alt
+from pathlib import Path
 
 # Create a brand list
 brands = ['Banana Boat', 'Hawaiian Tropic', 'Neutrogena', 'Coppertone',
@@ -34,7 +35,8 @@ def mentions_brand(entities_or_str, brand):
 # Cache: the CSV is read once, not on every interaction
 @st.cache_data
 def load_data():
-    return pd.read_csv("data/processed/df_sunscreen_dashboard.csv")
+    root = Path(__file__).resolve().parent.parent
+    return pd.read_csv(root/"data"/ "processed"/"df_sunscreen_dashboard.csv")
 
 df = load_data()
 n_synthetic = df["is_synthetic"].sum()
