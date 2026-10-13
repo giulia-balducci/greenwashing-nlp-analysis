@@ -112,3 +112,15 @@ with col2:
     )
     st.caption("Mean sentiment score ranges from -1 (all documents negative) to +1 (all documents positive). Each document is scored as a whole, so a reef-safe brand may score lower than how it is actually discussed, for instance if mentioned as a trusted alternative in a document with overall negative sentiment.")
     st.caption(f"Brands marked \"Few documents\" are based on fewer than {MIN_DOCS} documents, so their average can change a lot with a single document.")
+
+# Filter the dataframe for documents mentioning ACCC, Edgewell, or Federal Court
+accc_pattern = "ACCC|Edgewell|Federal Court"
+df_accc = df[df["Text"].str.contains(accc_pattern, case=False, na=False)]
+
+# Create columns for VADER vs RoBERTa comparison and ACCC mentions
+col3, col4 = st.columns([1,1])
+with col3:
+    st.write("### VADER vs RoBERTa comparison")
+    st.write(f"Based on {len(df_accc)} documents mentioning the ACCC case.")
+with col4:
+    st.write("### ACCC mentions")
