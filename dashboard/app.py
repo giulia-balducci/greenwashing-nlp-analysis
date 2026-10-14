@@ -122,5 +122,30 @@ col3, col4 = st.columns([1,1])
 with col3:
     st.write("### VADER vs RoBERTa comparison")
     st.write(f"Based on {len(df_accc)} documents mentioning the ACCC case.")
+    # Count how many ACCC documents each model puts in each sentiment class.
+    # Reindex fixes the order and shows 0 for a class with no documents.
+    comparison = pd.DataFrame({
+    "VADER": df_accc["sentiment_label"].value_counts(),
+    "RoBERTa": df_accc["roberta_label"].value_counts(),
+    }).reindex(["negative", "neutral", "positive"], fill_value=0)
+    st.dataframe(comparison)
+    # Unpivot the table from wide to long (one row per model and sentiment), so Altair can use "model" as a column
+    comparison_long = comparison.rename_axis("sentiment").reset_index().melt(
+    id_vars="sentiment", var_name="model", value_name="documents"
+    )
+    # Grouped bars: one pair (VADER, RoBERTa) for each sentiment class.
+    # Counts, not percentages: 75 documents are too few for shares to be meaningful.
+    # The sort lists keep the same order as the table and the other chart.
+    # The colour scale pins VADER to light blue and RoBERTa to dark blue.
+    chart_cmp = alt.Chart(comparison_long).mark_bar().encode(
+    x=alt.X("sentiment", sort=["negative", "neutral", "positive"], axis=alt.Axis(labelAngle=0, title="Sentiment")),
+    xOffset=alt.XOffset("model", sort=["VADER", "RoBERTa"]),
+    y=alt.Y("documents", axis=alt.Axis(title="Number of documents")),
+    color=alt.Color("model", title="Model", sort=["VADER", "RoBERTa"], scale=alt.Scale(domain=["VADER", "RoBERTa"], range=["#83c9ff", "#0068c9"]), legend=alt.Legend(orient="top", direction="horizontal")),
+    tooltip=["model", "sentiment", "documents"],
+    ).properties(height=300)
+    st.altair_chart(chart_cmp, use_container_width=True)
+    # Reading note: the explanation is a hypothesis, not verified on labelled data
+    st.caption("VADER scores text with a word list and fixed rules, so it tends to miss sarcasm and irony and can read sarcastic or ironic comments as positive. RoBERTa takes the context of the whole text into account and is better equipped to handle this. The gap between the two on these 75 documents is consistent with that explanation. This explanation has not been checked against hand-labelled data.")
 with col4:
     st.write("### ACCC mentions")
