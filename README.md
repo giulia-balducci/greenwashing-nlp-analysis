@@ -82,9 +82,11 @@ Both models score sentiment at the document level, not the entity level: reef-sa
 - A brand selector (9 brands). For the selected brand: the share of documents classified negative, neutral or positive by RoBERTa, and the number of documents the chart is based on.
 - A summary table for all brands: number of documents mentioning the brand and mean sentiment score (-1 to +1). Brands with fewer than 10 documents are marked "Few documents", because a single document can shift their average a lot.
 - A notice with the number of real and synthetic documents, computed from the `is_synthetic` column, and two reading notes: the bars show how a brand is discussed, not proof of greenwashing; scores are computed per document, not per brand.
+- A comparison of VADER and RoBERTa on the 75 documents mentioning the ACCC case: number of documents per sentiment class for each model, with the counts also available as a table. A note says that the gap is consistent with VADER missing sarcasm and that this explanation has not been checked against hand-labelled data.
+- For the same 75 documents, a bar chart of how many of them name each brand. A note says that the case concerns only Banana Boat and Hawaiian Tropic and that the dashboard does not report its outcome.
 
 **Design choices**
-- VADER is not shown: the dashboard presents RoBERTa results only.
+- VADER appears only in the comparison on the 75 ACCC documents; everywhere else the dashboard presents RoBERTa results.
 - The model is not run in the dashboard. It reads the precomputed `data/processed/df_sunscreen_dashboard.csv` (268 rows), written by notebook 05.
 - Documents are attributed to brands through the spaCy entities, as in notebook 05.
 - The app has its own `dashboard/requirements.txt` (pandas, streamlit, altair). The `requirements.txt` in the repository root covers the notebooks and is not read by the deployed app.
@@ -103,7 +105,6 @@ streamlit run dashboard/app.py
 - Scores are computed per document, not per brand mention (see Limitations above for the Raw Elements case).
 
 ## Future Work
-- **ACCC view in the dashboard:** sentiment of the 75 documents mentioning the case, as in notebook 05.
 - **Real data:** a collector for new online mentions of the nine brands, analysed with the same RoBERTa pipeline and added to the dataset. An alert on a brand's mean score would need a threshold and a minimum number of documents, to be set once real data is available.
 
 ## Repository Structure
