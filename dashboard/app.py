@@ -81,7 +81,7 @@ with col1:
             scale=alt.Scale(domain=["negative", "neutral", "positive"], range=["#ff7f50", "#b0b0b0", "#008080"]),
             legend=None,
         ),
-    ).properties(height=300)
+    ).properties(height=420)
     st.altair_chart(chart, use_container_width=True)
     st.caption("The bars show the share of documents associated with a sentiment: negative, neutral, or positive. This shows how the brand is discussed, not proof that it engages in greenwashing.")
 
@@ -128,7 +128,8 @@ with col3:
     "VADER": df_accc["sentiment_label"].value_counts(),
     "RoBERTa": df_accc["roberta_label"].value_counts(),
     }).reindex(["negative", "neutral", "positive"], fill_value=0)
-    st.dataframe(comparison)
+    with st.expander("Show counts as a table"):
+        st.dataframe(comparison)
     # Unpivot the table from wide to long (one row per model and sentiment), so Altair can use "model" as a column
     comparison_long = comparison.rename_axis("sentiment").reset_index().melt(
     id_vars="sentiment", var_name="model", value_name="documents"
@@ -143,9 +144,29 @@ with col3:
     y=alt.Y("documents", axis=alt.Axis(title="Number of documents")),
     color=alt.Color("model", title="Model", sort=["VADER", "RoBERTa"], scale=alt.Scale(domain=["VADER", "RoBERTa"], range=["#83c9ff", "#0068c9"]), legend=alt.Legend(orient="top", direction="horizontal")),
     tooltip=["model", "sentiment", "documents"],
-    ).properties(height=300)
+    ).properties(height=420)
     st.altair_chart(chart_cmp, use_container_width=True)
     # Reading note: the explanation is a hypothesis, not verified on labelled data
     st.caption("VADER scores text with a word list and fixed rules, so it tends to miss sarcasm and irony and can read sarcastic or ironic comments as positive. RoBERTa takes the context of the whole text into account and is better equipped to handle this. The gap between the two on these 75 documents is consistent with that explanation. This explanation has not been checked against hand-labelled data.")
 with col4:
     st.write("### ACCC mentions")
+    # For each brand, count in how many of the 75 ACCC documents it is named (through the spaCy entities).
+    accc_brand_counts = pd.Series({
+    brand: df_accc["entities"].apply(mentions_brand, args=(brand,)).sum()
+    for brand in brands
+    })
+    # Turn the counts into a table with two named columns (Brand, Number of documents), so Altair can use them
+    accc_table = accc_brand_counts.rename_axis("Brand").reset_index(name="Number of documents")
+    # Horizontal bars, sorted from the brand with most documents to the one with fewest.
+    # Counts, not percentages: 75 documents are too few for shares to be meaningful.
+    # tickMinStep=1 keeps the axis on whole numbers; the purple is not used in the other charts,
+    # so it cannot be read as a sentiment or a model.
+    chart_accc = alt.Chart(accc_table).mark_bar(color="#b07aa1").encode(
+        x=alt.X("Number of documents", axis=alt.Axis(title="Number of documents", tickMinStep=1)),
+    y=alt.Y("Brand", sort="-x", axis=alt.Axis(title=None)),
+    tooltip=["Brand", "Number of documents"],
+    ).properties(height=420)
+    st.altair_chart(chart_accc, use_container_width=True)
+    # Reading notes: what a missing bar means, and the status of the case.
+    st.caption("Number of documents, among the 75 mentioning the ACCC case, in which each brand is named. No bar means the brand is not named in any of them.")
+    st.caption("The case concerns only Banana Boat and Hawaiian Tropic. The ACCC's claims are allegations, and this dashboard does not report the outcome of the case.")
