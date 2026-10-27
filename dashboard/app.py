@@ -121,7 +121,7 @@ df_accc = df[df["Text"].str.contains(accc_pattern, case=False, na=False)]
 col3, col4 = st.columns([1,1])
 with col3:
     st.write("### VADER vs RoBERTa comparison")
-    st.write(f"Based on {len(df_accc)} documents mentioning the ACCC case.")
+    st.write(f"Based on {len(df_accc)} documents mentioning the ACCC case. All of them are synthetic (AI-generated) and have demonstrative value only.")
     # Count how many ACCC documents each model puts in each sentiment class.
     # Reindex fixes the order and shows 0 for a class with no documents.
     comparison = pd.DataFrame({
