@@ -168,5 +168,5 @@ with col4:
     ).properties(height=420)
     st.altair_chart(chart_accc, use_container_width=True)
     # Reading notes: what a missing bar means, and the status of the case.
-    st.caption("Number of documents, among the 75 mentioning the ACCC case, in which each brand is named. No bar means the brand is not named in any of them.")
+    st.caption("Number of documents, among the 75 mentioning the ACCC case (all synthetic, AI-generated), in which each brand is named. No bar means the brand is not named in any of them.")
     st.caption("The case concerns only Banana Boat and Hawaiian Tropic. The ACCC's claims are allegations, and this dashboard does not report the outcome of the case.")
