@@ -61,7 +61,7 @@ Using spaCy entity mentions (not string matching) to attribute documents to bran
 | Badger Balm | Reef-safe | +0.44 |
 
 ### ACCC Case Study
-Of the 268 documents, **75 mention the ACCC case** (`ACCC`, `Edgewell`, `Federal Court`). This subset shows the sharpest VADER/RoBERTa divergence in the whole analysis:
+Of the 268 documents, **75 mention the ACCC case** (`ACCC`, `Edgewell`, `Federal Court`). All 75 are synthetic: none of the 8 real documents mentions the case, so the results on this subset are demonstrative only. This subset shows the sharpest VADER/RoBERTa divergence in the whole analysis:
 
 | | VADER | RoBERTa |
 |---|---|---|
