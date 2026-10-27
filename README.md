@@ -78,6 +78,10 @@ Both models score sentiment at the document level, not the entity level: reef-sa
 
 `dashboard/app.py` is a Streamlit dashboard built on the results of notebook 05. It is written for readers who have not seen the notebooks, such as a climate media-monitoring team.
 
+![Screenshot of the dashboard: brand sentiment, summary table, VADER vs RoBERTa comparison and ACCC mentions](docs/dashboard.png)
+
+*Screenshot of the deployed dashboard, taken on 27 October 2026. The data are demonstrative: 8 real and 260 synthetic documents.*
+
 **What it shows**
 - A brand selector (9 brands). For the selected brand: the share of documents classified negative, neutral or positive by RoBERTa, and the number of documents the chart is based on.
 - A summary table for all brands: number of documents mentioning the brand and mean sentiment score (-1 to +1). Brands with fewer than 10 documents are marked "Few documents", because a single document can shift their average a lot.
